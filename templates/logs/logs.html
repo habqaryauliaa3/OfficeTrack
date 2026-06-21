@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Riwayat Aktivitas</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="navbar">
+
+            <div class="navbar-logo">
+                OfficeTrack
+            </div>
+
+            <div class="navbar-menu">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/finance">Finance</a>
+                <a href="/logs">Logs</a>
+                <a href="/logout">Logout</a>
+            </div>
+            
+        </div>
+        
+        <h1>Riwayat Aktivitas</h1>
+
+        <hr>
+
+        {% if logs %}
+
+            {% for log in logs %}
+
+                <p>
+                    {{ log[3] }}
+                </p>
+
+                <p>
+                    {{ log[2] }}
+                </p>
+
+                <hr>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                Belum ada aktivitas
+            </p>
+
+        {% endif %}
+
+        <a href="/dashboard">
+            Kembali ke Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>

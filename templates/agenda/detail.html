@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Agenda</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="navbar">
+
+            <div class="navbar-logo">
+                OfficeTrack
+            </div>
+
+            <div class="navbar-menu">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/finance">Finance</a>
+                <a href="/logs">Logs</a>
+                <a href="/logout">Logout</a>
+            </div>
+            
+        </div>
+
+        <h1>
+            {{ agenda[2] }}
+        </h1>
+
+        <hr>
+
+        <h3>Status Agenda</h3>
+
+        <p>
+            {% if agenda_finished %}
+                <span class="status-badge status-selesai">
+                    Selesai
+                </span>
+            {% else %}
+                <span class="status-badge status-aktif">
+                    Aktif
+                </span>
+            {% endif %}
+        </p>
+
+        <hr>
+
+        <h3>Deskripsi</h3>
+
+        <p>
+            {{ agenda[3] }}
+        </p>
+
+        <h3>Tanggal</h3>
+
+        <p>
+            {{ agenda[4] | tanggal }}
+        </p>
+
+        <hr>
+
+        <h3>Daftar Tugas</h3>
+
+        <form
+            action="/add-task/{{ agenda[0] }}"
+            method="POST"
+        >
+
+            <input
+                type="text"
+                name="nama_tugas"
+                placeholder="Nama Tugas"
+                required
+            >
+
+            <button type="submit">
+                Tambah Tugas
+            </button>
+
+        </form>
+
+        <br>
+
+        {% if tasks %}
+
+            <ul>
+
+                {% for task in tasks %}
+
+                    <div class="task-card">
+
+                        <strong>{{ task[2] }}</strong>
+
+                        <div class="task-actions">
+                            <a href="/update-task-status/{{ task[0] }}/belum">🔴</a>
+                            <a href="/update-task-status/{{ task[0] }}/progress">🟡</a>
+                            <a href="/update-task-status/{{ task[0] }}/selesai">🟢</a>
+
+                            <a href="/edit-task/{{ task[0] }}">Edit</a>
+                            <a href="/delete-task/{{ task[0] }}">Hapus</a>
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                Belum ada tugas
+            </p>
+
+        {% endif %}
+
+        <hr>
+
+        <a href="/dashboard">
+            Kembali ke Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>

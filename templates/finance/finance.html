@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Pemasukan</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="navbar">
+
+            <div class="navbar-logo">
+                OfficeTrack
+            </div>
+
+            <div class="navbar-menu">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/finance">Finance</a>
+                <a href="/logs">Logs</a>
+                <a href="/logout">Logout</a>
+            </div>
+
+        </div>
+
+        <h1>Keuangan</h1>
+
+        <hr>
+
+        <h2>Ringkasan Keuangan</h2>
+
+        <div class="finance-summary">
+
+            <div class="finance-card income-card">
+                <h4>Total Income</h4>
+                <p>{{ total_income | rupiah }}</p>
+            </div>
+
+            <div class="finance-card expense-card">
+                <h4>Total Expense</h4>
+                <p>{{ total_expense | rupiah }}</p>
+            </div>
+
+            <div class="finance-card balance-card">
+                <h4>Saldo</h4>
+                <p>{{ balance | rupiah }}</p>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h2>Pemasukan</h2>
+
+        <form action="/add-income" method="POST">
+            <input type="date" name="tanggal" required>
+            <input type="text" name="keterangan" placeholder="Keterangan" required>
+            <input type="number" name="nominal" placeholder="Nominal" required>
+
+            <button type="submit">
+                Tambah Pemasukan
+            </button>
+        </form>
+
+        {% if incomes %}
+            <ul>
+                {% for income in incomes %}
+                    <li>
+                        {{ income[2] | tanggal }}
+                        |
+                        {{ income[3] }}
+                        |
+                        {{ income[4] | rupiah }}
+
+                        <a href="/delete-income/{{ income[0] }}">
+                            Hapus
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <hr>
+
+        <h2>Pengeluaran</h2>
+
+        <form action="/add-expense" method="POST">
+            <input type="date" name="tanggal" required>
+            <input type="text" name="keterangan" placeholder="Keterangan" required>
+            <input type="number" name="nominal" placeholder="Nominal" required>
+
+            <button type="submit">
+                Tambah Pengeluaran
+            </button>
+        </form>
+
+        {% if expenses %}
+            <ul>
+                {% for expense in expenses %}
+                    <li>
+                        {{ expense[2] | tanggal }}
+                        |
+                        {{ expense[3] }}
+                        |
+                        {{ expense[4] | rupiah }}
+
+                        <a href="/delete-expense/{{ expense[0] }}">
+                            Hapus
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

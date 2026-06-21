@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Tugas</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="navbar">
+
+            <div class="navbar-logo">
+                OfficeTrack
+            </div>
+
+            <div class="navbar-menu">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/finance">Finance</a>
+                <a href="/logs">Logs</a>
+                <a href="/logout">Logout</a>
+            </div>
+            
+        </div>
+        
+        <h1>Edit Tugas</h1>
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="nama_tugas"
+                value="{{ task[2] }}"
+                required
+            >
+
+            <button type="submit">
+                Simpan
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

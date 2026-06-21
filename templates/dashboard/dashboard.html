@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - OfficeTrack</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="navbar">
+
+            <div class="navbar-logo">
+                OfficeTrack
+            </div>
+
+            <div class="navbar-menu">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/finance">Finance</a>
+                <a href="/logs">Logs</a>
+                <a href="/logout">Logout</a>
+            </div>
+
+        </div>
+
+        <h2>Selamat Datang, {{ nama }}</h2>
+
+        <hr>
+
+        <h3>Ringkasan</h3>
+
+        <div class="summary-container">
+
+            <div class="summary-card">
+                <h4>Agenda Aktif</h4>
+                <p>{{ agenda_aktif }}</p>
+            </div>
+
+            <div class="summary-card">
+                <h4>Agenda Selesai</h4>
+                <p>{{ agenda_selesai }}</p>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <a href="/create-agenda">
+            + Tambah Agenda
+        </a>
+
+        <h3>Daftar Agenda</h3>
+
+        {% if daftar_agenda %}
+
+            <div class="agenda-container">
+
+            {% for agenda in daftar_agenda %}
+
+                <div class="agenda-card">
+
+                    <div class="agenda-header">
+
+                        {% if agenda[5] == 1 %}
+                            ⭐
+                        {% else %}
+                            ☆
+                        {% endif %}
+
+                        <a href="/agenda/{{ agenda[0] }}">
+                            {{ agenda[2] }}
+                        </a>
+
+                    </div>
+
+                    <p class="agenda-date">
+                        {{ agenda[4] | tanggal }}
+                    </p>
+
+                    <div class="agenda-actions">
+                        <a href="/edit-agenda/{{ agenda[0] }}">Edit</a>
+                        <a href="/delete-agenda/{{ agenda[0] }}">Hapus</a>
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>
+                Belum ada agenda.
+            </p>
+
+        {% endif %}
+
+        <hr>
+
+    </div>
+
+</body>
+</html>
