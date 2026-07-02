@@ -44,19 +44,18 @@ def register_user(nama, username, password):
     return True
 
 
-def login_user(username, password):
+def login_user(username):
+
     conn = get_connection()
-    cursor = conn.cursor()
 
-    cursor.execute(
+    user = conn.execute(
         """
-    SELECT * FROM users
-    WHERE username = ? AND password = ?
-    """,
-        (username, password),
-    )
-
-    user = cursor.fetchone()
+        SELECT *
+        FROM users
+        WHERE username = ?
+        """,
+        (username,),
+    ).fetchone()
 
     conn.close()
 

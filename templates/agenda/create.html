@@ -27,54 +27,63 @@
                 <a href="/finance">Finance</a>
                 <a href="/logs">Logs</a>
                 <a href="/logout">Logout</a>
+
+                <button
+                    id="theme-toggle"
+                    type="button">
+                    🌙
+                </button>
             </div>
             
         </div>
 
-        <h1>Tambah Agenda</h1>
+        <div class="card">
+            <h1>Tambah Agenda</h1>
 
-        <form method="POST">
+            <form method="POST">
 
-            <p>Judul Agenda</p>
+                <p>Judul Agenda</p>
 
-            <input
-                type="text"
-                name="judul"
-                required
-            >
-
-            <p>Deskripsi</p>
-
-            <textarea
-                name="deskripsi"
-                rows="5"
-            ></textarea>
-
-            <p>Tanggal</p>
-
-            <input
-                type="date"
-                name="tanggal"
-                required
-            >
-
-            <label class="checkbox-group">
-
-            
                 <input
-                    type="checkbox"
-                    name="prioritas"
+                    type="text"
+                    name="judul"
+                    required
                 >
 
-                Prioritas
+                <p>Deskripsi</p>
 
-            </label>
+                <textarea
+                    name="deskripsi"
+                    rows="5"
+                ></textarea>
 
-            <button type="submit">
-                Simpan Agenda
-            </button>
+                <p>Tanggal</p>
 
-        </form>
+                <input
+                    type="date"
+                    name="tanggal"
+                    required
+                >
+
+                <label class="checkbox-group">
+
+                
+                    <input
+                        type="checkbox"
+                        name="prioritas"
+                    >
+
+                    Prioritas
+
+                </label>
+
+                <button type="submit">
+                    Simpan Agenda
+                </button>
+
+            </form>
+            
+        </div>
 
         <br>
 
@@ -84,5 +93,10 @@
 
     </div>
 
+    <script
+        defer
+        src="{{ url_for('static', filename='js/darkmode.js') }}">
+    </script>
+    
 </body>
 </html>

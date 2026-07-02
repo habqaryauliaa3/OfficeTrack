@@ -27,28 +27,42 @@
                 <a href="/finance">Finance</a>
                 <a href="/logs">Logs</a>
                 <a href="/logout">Logout</a>
+
+                <button
+                    id="theme-toggle"
+                    type="button">
+                    🌙
+                </button>
             </div>
             
         </div>
         
-        <h1>Edit Tugas</h1>
+        <div class="card">
+            <h1>Edit Tugas</h1>
 
-        <form method="POST">
+            <form method="POST">
 
-            <input
-                type="text"
-                name="nama_tugas"
-                value="{{ task[2] }}"
-                required
-            >
+                <input
+                    type="text"
+                    name="nama_tugas"
+                    value="{{ task[2] }}"
+                    required
+                >
 
-            <button type="submit">
-                Simpan
-            </button>
+                <button type="submit">
+                    Simpan
+                </button>
 
-        </form>
+            </form>
+
+        </div>
 
     </div>
 
+    <script
+        defer
+        src="{{ url_for('static', filename='js/darkmode.js') }}">
+    </script>
+    
 </body>
 </html>

@@ -3,18 +3,75 @@
 from database.finance_db import *
 from services.activity_service import *
 
+INCOME_CATEGORIES = [
+    "Uang Saku",
+    "THR",
+    "Bonus",
+    "Kas",
+    "Lainnya",
+]
 
-def create_income_service(user_id, tanggal, keterangan, nominal):
-    add_income(user_id, tanggal, keterangan, nominal)
+EXPENSE_CATEGORIES = [
+    "Transport",
+    "Makan",
+    "Internet",
+    "ATK",
+    "Fotokopi",
+    "Lainnya",
+]
+
+
+def validate_nominal(nominal):
+
+    nominal = int(nominal)
+
+    if nominal <= 0:
+        return "Nominal harus lebih dari 0"
+
+    return None
+
+
+def validate_keterangan(keterangan):
+
+    if not keterangan.strip():
+        return "Keterangan wajib diisi"
+
+    if len(keterangan) > 150:
+        return "Keterangan terlalu panjang"
+
+    return None
+
+
+def create_income_service(user_id, kategori, tanggal, keterangan, nominal):
+    error = validate_nominal(nominal)
+    if error:
+        return error
+
+    error = validate_keterangan(keterangan)
+    if error:
+        return error
+
+    add_income(user_id, kategori, tanggal, keterangan, nominal)
 
     add_log(user_id, f"Menambahkan pemasukan: {keterangan}")
 
+    return None
 
-def create_expense_service(user_id, tanggal, keterangan, nominal):
-    add_expense(user_id, tanggal, keterangan, nominal)
+
+def create_expense_service(user_id, kategori, tanggal, keterangan, nominal):
+    error = validate_nominal(nominal)
+    if error:
+        return error
+
+    error = validate_keterangan(keterangan)
+    if error:
+        return error
+
+    add_expense(user_id, kategori, tanggal, keterangan, nominal)
 
     add_log(user_id, f"Menambahkan pengeluaran: {keterangan}")
 
+    return None
 
 def delete_income_service(user_id, income_id):
     delete_income(income_id)
@@ -47,3 +104,31 @@ def get_finance_summary_service(user_id):
         "total_expense": total_expense,
         "balance": balance,
     }
+
+
+def get_income_categories():
+    return INCOME_CATEGORIES
+
+
+def get_expense_categories():
+    return EXPENSE_CATEGORIES
+
+
+def get_monthly_summary_service(
+    user_id,
+    bulan,
+    tahun,
+):
+    return get_monthly_summary(
+        user_id,
+        bulan,
+        tahun,
+    )
+
+
+def get_income_chart_data_service(user_id):
+    return get_income_chart_data(user_id)
+
+
+def get_expense_chart_data_service(user_id):
+    return get_expense_chart_data(user_id)

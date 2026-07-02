@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <title>Riwayat Aktivitas</title>
 
-    <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon"
+          type="image/png"
+          href="{{ url_for('static', filename='icons/logo.png') }}">
 
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
@@ -23,6 +26,12 @@
                 <a href="/finance">Finance</a>
                 <a href="/logs">Logs</a>
                 <a href="/logout">Logout</a>
+
+                <button
+                    id="theme-toggle"
+                    type="button">
+                    🌙
+                </button>
             </div>
             
         </div>
@@ -34,16 +43,21 @@
         {% if logs %}
 
             {% for log in logs %}
+            
+                <div class="card log-card">
 
-                <p>
-                    {{ log[3] }}
-                </p>
+                    <div class="card-body">
+                        <p>
+                            {{ log[3] }}
+                        </p>
 
-                <p>
-                    {{ log[2] }}
-                </p>
+                        <p>
+                            {{ log[2] }}
+                        </p>
 
-                <hr>
+                    </div>
+                    
+                </div>
 
             {% endfor %}
 
@@ -61,5 +75,10 @@
 
     </div>
 
+    <script
+        defer
+        src="{{ url_for('static', filename='js/darkmode.js') }}">
+    </script>
+    
 </body>
 </html>

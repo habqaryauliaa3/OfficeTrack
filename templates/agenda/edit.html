@@ -26,62 +26,71 @@
                 <a href="/finance">Finance</a>
                 <a href="/logs">Logs</a>
                 <a href="/logout">Logout</a>
+
+                <button
+                    id="theme-toggle"
+                    type="button">
+                    🌙
+                </button>
             </div>
             
         </div>
 
-        <h1>Edit Agenda</h1>
+        <div class="card">
+            <h1>Edit Agenda</h1>
 
-        <form method="POST">
+            <form method="POST">
 
-            <p>Judul Agenda</p>
+                <p>Judul Agenda</p>
 
-            <input
-                type="text"
-                name="judul"
-                value="{{ agenda[2] }}"
-                required
-            >
-
-            <p>Deskripsi</p>
-
-            <textarea
-                name="deskripsi"
-                rows="5"
-            >{{ agenda[3] }}</textarea>
-
-            <p>Tanggal</p>
-
-            <input
-                type="date"
-                name="tanggal"
-                value="{{ agenda[4] }}"
-                required
-            >
-
-                
-            <label class="checkbox-group">
-
-            
                 <input
-                    type="checkbox"
-                    name="prioritas"
-
-                    {% if agenda[5] == 1 %}
-                        checked
-                    {% endif %}
-
+                    type="text"
+                    name="judul"
+                    value="{{ agenda[2] }}"
+                    required
                 >
 
-                Prioritas
-            </label>
+                <p>Deskripsi</p>
+
+                <textarea
+                    name="deskripsi"
+                    rows="5"
+                >{{ agenda[3] }}</textarea>
+
+                <p>Tanggal</p>
+
+                <input
+                    type="date"
+                    name="tanggal"
+                    value="{{ agenda[4] }}"
+                    required
+                >
+
+                    
+                <label class="checkbox-group">
+
+                
+                    <input
+                        type="checkbox"
+                        name="prioritas"
+
+                        {% if agenda[5] == 1 %}
+                            checked
+                        {% endif %}
+
+                    >
+
+                    Prioritas
+                </label>
 
 
-            <button type="submit">
-                Simpan Perubahan
-            </button>
+                <button type="submit">
+                    Simpan Perubahan
+                </button>
 
-        </form>
+            </form>
+            
+        </div>
 
         <br>
 
@@ -91,5 +100,10 @@
 
     </div>
 
+    <script
+        defer
+        src="{{ url_for('static', filename='js/darkmode.js') }}">
+    </script>
+    
 </body>
 </html>

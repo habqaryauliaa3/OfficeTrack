@@ -43,8 +43,8 @@ def login():
 
         if user:
 
-            session["user_id"] = user[0]
-            session["nama"] = user[1]
+            session["user_id"] = user["id"]
+            session["nama"] = user["nama"]
 
             return redirect("/dashboard")
 

@@ -26,6 +26,14 @@
                 <a href="/finance">Finance</a>
                 <a href="/logs">Logs</a>
                 <a href="/logout">Logout</a>
+
+                <button
+                    id="theme-toggle"
+                    type="button"
+                >
+                    🌙
+                </button>
+
             </div>
 
         </div>
@@ -38,12 +46,12 @@
 
         <div class="summary-container">
 
-            <div class="summary-card">
+            <div class="card summary-card">
                 <h4>Agenda Aktif</h4>
                 <p>{{ agenda_aktif }}</p>
             </div>
 
-            <div class="summary-card">
+            <div class="card summary-card">
                 <h4>Agenda Selesai</h4>
                 <p>{{ agenda_selesai }}</p>
             </div>
@@ -56,15 +64,92 @@
             + Tambah Agenda
         </a>
 
+        <br><br>
+
+        <form method="GET" action="/dashboard" class="dashboard-filter">
+
+            <input
+                type="text"
+                name="keyword"
+                placeholder="Cari agenda..."
+                value="{{ keyword if keyword else '' }}"
+            >
+
+            <select name="status">
+
+                <option value="semua"
+                    {% if status == "semua" %}
+                        selected
+                    {% endif %}
+                >
+                    Semua
+                </option>
+
+                <option value="aktif"
+                    {% if status == "aktif" %}
+                        selected
+                    {% endif %}
+                >
+                    Aktif
+                </option>
+
+                <option value="selesai"
+                    {% if status == "selesai" %}
+                        selected
+                    {% endif %}
+                >
+                    Selesai
+                </option>
+
+            </select>
+
+            <select name="prioritas">
+
+                <option value="semua"
+                    {% if prioritas == "semua" %}
+                        selected
+                    {% endif %}
+                >
+                    Semua Prioritas
+                </option>
+
+                <option value="prioritas"
+                    {% if prioritas == "prioritas" %}
+                        selected
+                    {% endif %}
+                >
+                    Prioritas
+                </option>
+
+                <option value="normal"
+                    {% if prioritas == "normal" %}
+                        selected
+                    {% endif %}
+                >
+                    Normal
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Cari
+            </button>
+
+        </form>
+
         <h3>Daftar Agenda</h3>
 
         {% if daftar_agenda %}
-
+        
             <div class="agenda-container">
 
-            {% for agenda in daftar_agenda %}
+            {% for item in daftar_agenda %}
 
-                <div class="agenda-card">
+                {% set agenda = item.agenda %}
+                {% set deadline_status = item.deadline_status %}
+                {% set progress = item.progress %}
+
+                <div class="card agenda-card">
 
                     <div class="agenda-header">
 
@@ -80,13 +165,108 @@
 
                     </div>
 
-                    <p class="agenda-date">
-                        {{ agenda[4] | tanggal }}
-                    </p>
+                    <div class="card-body">
 
+                        <!-- Tanggal -->
+                        <p class="agenda-date">
+                            📅 {{ agenda[4] | tanggal }}
+                        </p>
+
+                        <!-- Status -->
+                        <div class="card-info">
+
+                            <p class="info-label">
+                                Status Deadline
+                            </p>
+                            
+                            {% if deadline_status == "belum" %}
+                                <p class="deadline-alert alert-belum">
+                                    ⚪ Belum
+                                </p>
+
+                            {% elif deadline_status == "h3" %}
+                                <p class="deadline-alert alert-warning">
+                                    ⚠️ 3 Hari Lagi
+                                </p>
+
+                            {% elif deadline_status == "h2" %}
+                                <p class="deadline-alert alert-warning">
+                                    ⚠️ 2 Hari Lagi
+                                </p>
+
+                            {% elif deadline_status == "h1" %}
+                                <p class="deadline-alert alert-warning">
+                                    🔥 Besok
+                                </p>
+
+                            {% elif deadline_status == "hari_ini" %}
+                                <p class="deadline-alert alert-danger">
+                                    🚨 Hari Ini
+                                </p>
+
+                            {% elif deadline_status == "pending" %}
+                                <p class="deadline-alert alert-danger">
+                                    ⏳ Pending
+                                </p>
+                            
+                            {% elif deadline_status == "selesai" %}
+                                <p class="deadline-alert alert-success">
+                                    ✅ Selesai
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Progress -->
+                        <div class="agenda-progress">
+
+                            <p class="info-label">
+                                Progress
+                            </p>
+
+                            <div class="progress-bar">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width: {{ progress }}%;"
+                                ></div>
+
+                            </div>
+
+                            <p class="progress-value">
+                                {{ progress }}%
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    
                     <div class="agenda-actions">
-                        <a href="/edit-agenda/{{ agenda[0] }}">Edit</a>
-                        <a href="/delete-agenda/{{ agenda[0] }}">Hapus</a>
+
+                        <a
+                            href="/edit-agenda/{{ agenda[0] }}"
+                            class="btn-edit"
+                        >
+                            ✏ Edit
+                        </a>
+
+                        <form
+                            action="/delete-agenda/{{ agenda[0] }}"
+                            method="POST"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn-delete"
+                                onclick="return confirm('Yakin ingin menghapus agenda ini?')"
+                            >
+                                🗑 Hapus
+                            </button>
+
+                        </form>
+
                     </div>
 
                 </div>
@@ -97,15 +277,22 @@
 
         {% else %}
 
-            <p>
-                Belum ada agenda.
-            </p>
+            {% if keyword %}
+                <p>Agenda tidak ditemukan.</p>
+            {% else %}
+                <p>Belum ada agenda.</p>
+            {% endif %}
 
         {% endif %}
 
         <hr>
 
     </div>
+
+    <script
+        defer
+        src="{{ url_for('static', filename='js/darkmode.js') }}">
+    </script>
 
 </body>
 </html>

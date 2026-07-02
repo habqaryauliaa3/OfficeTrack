@@ -1,0 +1,191 @@
+/* =========================
+   Dark Mode
+========================= */
+
+/* Background utama */
+body.dark{
+    background:#111827;
+    color:#f9fafb;
+}
+
+/* Container */
+body.dark .container{
+    color:#f9fafb;
+}
+
+/* Heading */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4{
+    color:#f9fafb;
+}
+
+/* Paragraph */
+body.dark p{
+    color:#e5e7eb;
+}
+
+/* Garis */
+body.dark hr{
+    border-top:1px solid #374151;
+}
+
+/* Card */
+body.dark .card,
+body.dark .task-card,
+body.dark .login-box,
+body.dark .register-box,
+body.dark .finance-item{
+    background:#1f2937;
+    color:#f9fafb;
+    border:1px solid #374151;
+}
+
+/* Navbar */
+body.dark .navbar{
+    background:#172554;
+}
+
+/* Link */
+body.dark a{
+    color:#93c5fd;
+}
+
+body.dark a:hover{
+    color:#bfdbfe;
+}
+
+/* Input */
+body.dark input,
+body.dark textarea,
+body.dark select{
+    background:#374151;
+    color:#f9fafb;
+    border:1px solid #4b5563;
+}
+
+/* Placeholder */
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+    color:#9ca3af;
+}
+
+/* Focus Input */
+body.dark input:focus,
+body.dark textarea:focus,
+body.dark select:focus{
+    border-color:#60a5fa;
+    box-shadow:0 0 0 3px rgba(96,165,250,.25);
+}
+
+/* Label */
+body.dark .info-label{
+    color:#d1d5db;
+}
+
+/* Agenda */
+body.dark .agenda-header{
+    border-bottom:1px solid #374151;
+}
+
+body.dark .agenda-header a{
+    color:#f9fafb;
+}
+
+body.dark .agenda-date{
+    color:#d1d5db;
+    border-bottom:1px solid #374151;
+}
+
+/* Progress */
+body.dark .progress-bar{
+    background:#374151;
+}
+
+body.dark .progress-value{
+    color:#f9fafb;
+}
+
+/* Summary */
+body.dark .summary-card h4{
+    color:#d1d5db;
+}
+
+body.dark .summary-card p{
+    color:#60a5fa;
+}
+
+/* Accordion */
+body.dark .accordion-header{
+    color:#f9fafb;
+}
+
+body.dark .accordion-header:hover{
+    color:#93c5fd;
+}
+
+/* Detail */
+body.dark .detail-header{
+    border-bottom:1px solid #374151;
+}
+
+body.dark .detail-section{
+    border-bottom:1px solid #374151;
+}
+
+/* Finance */
+body.dark .finance-info p{
+    color:#f9fafb;
+}
+
+/* Filter */
+body.dark .dashboard-filter input,
+body.dark .dashboard-filter select{
+    background:#374151;
+}
+
+/* Chart */
+body.dark .chart-container{
+    background:#1f2937;
+    color:#f9fafb;
+}
+
+body.dark .alert-success{
+    background:#14532d;
+    color:#bbf7d0;
+    border:1px solid #22c55e;
+}
+
+body.dark .alert-warning{
+    background:#78350f;
+    color:#fde68a;
+    border:1px solid #f59e0b;
+}
+
+body.dark .alert-danger{
+    background:#7f1d1d;
+    color:#fecaca;
+    border:1px solid #ef4444;
+}
+
+body.dark .alert-belum{
+    background:#374151;
+    color:#f9fafb;
+    border:1px solid #6b7280;
+}
+
+body.dark .btn-edit{
+    background:#3b82f6;
+    color:#ffffff;
+}
+
+body.dark .btn-edit:hover{
+    background:var(--primary);
+}
+
+body.dark .btn-edit i,
+body.dark .btn-danger i{
+    color:inherit;
+}
+

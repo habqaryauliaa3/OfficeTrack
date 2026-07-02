@@ -27,108 +27,305 @@
                 <a href="/finance">Finance</a>
                 <a href="/logs">Logs</a>
                 <a href="/logout">Logout</a>
+
+                <button
+                    id="theme-toggle"
+                    type="button">
+                    🌙
+                </button>
             </div>
             
         </div>
 
-        <h1>
-            {{ agenda[2] }}
-        </h1>
+        <div class="card detail-card">
 
-        <hr>
+            <div class="detail-header">
 
-        <h3>Status Agenda</h3>
+                <h2>
 
-        <p>
-            {% if agenda_finished %}
-                <span class="status-badge status-selesai">
-                    Selesai
-                </span>
-            {% else %}
-                <span class="status-badge status-aktif">
-                    Aktif
-                </span>
-            {% endif %}
-        </p>
+                    {% if agenda[5] == 1 %}
+                        ⭐
+                    {% else %}
+                        ☆
+                    {% endif %}
 
-        <hr>
+                    {{ agenda[2] }}
 
-        <h3>Deskripsi</h3>
+                </h2>
 
-        <p>
-            {{ agenda[3] }}
-        </p>
+            </div>
 
-        <h3>Tanggal</h3>
 
-        <p>
-            {{ agenda[4] | tanggal }}
-        </p>
+            <div class="detail-section">
 
-        <hr>
+                <p class="info-label">
+                    Status Agenda
+                </p>
 
-        <h3>Daftar Tugas</h3>
+                <div class="detail-status">
 
-        <form
-            action="/add-task/{{ agenda[0] }}"
-            method="POST"
-        >
+                    {% if agenda_finished %}
 
-            <input
-                type="text"
-                name="nama_tugas"
-                placeholder="Nama Tugas"
-                required
+                    <span class="status-badge status-selesai">
+
+                        🟢 SELESAI
+
+                    </span>
+
+
+                    {% else %}
+
+                    <span class="status-badge status-belum">
+
+                        🔴 AKTIF
+
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-section">
+
+                <p class="info-label">
+
+                    Deskripsi
+
+                </p>
+
+                <p>
+
+                    {{ agenda[3] }}
+
+                </p>
+
+            </div>
+
+            <div class="detail-section">
+
+                <p class="info-label">
+
+                    Deadline
+
+                </p>
+
+                <p class="agenda-date">
+
+                    📅 {{ agenda[4] | tanggal }}
+
+                </p>
+
+            </div>
+
+            <h3>Daftar Tugas</h3>
+
+            <form
+                action="/add-task/{{ agenda[0] }}"
+                method="POST"
             >
 
-            <button type="submit">
-                Tambah Tugas
-            </button>
+                <input
+                    type="text"
+                    name="nama_tugas"
+                    placeholder="Nama Tugas"
+                    required
+                >
 
-        </form>
+                <button type="submit">
+                    Tambah Tugas
+                </button>
 
-        <br>
+            </form>
+         
 
-        {% if tasks %}
+            {% if tasks %}
 
-            <ul>
+                <ul>
 
-                {% for task in tasks %}
+                    {% for task in tasks %}
 
-                    <div class="task-card">
+                        <li class="card task-card">
 
-                        <strong>{{ task[2] }}</strong>
 
-                        <div class="task-actions">
-                            <a href="/update-task-status/{{ task[0] }}/belum">🔴</a>
-                            <a href="/update-task-status/{{ task[0] }}/progress">🟡</a>
-                            <a href="/update-task-status/{{ task[0] }}/selesai">🟢</a>
+                            <div class="accordion-header">
 
-                            <a href="/edit-task/{{ task[0] }}">Edit</a>
-                            <a href="/delete-task/{{ task[0] }}">Hapus</a>
-                        </div>
+                                <h4>{{ task[2] }}</h4>
 
-                    </div>
+                                <span class="accordion-icon">
+                                    ▶
+                                </span>
 
-                {% endfor %}
+                            </div>
 
-            </ul>
+                            <div class="accordion-content">
 
-        {% else %}
+                                <div class="task-status">
 
-            <p>
-                Belum ada tugas
-            </p>
+                                    <p class="info-label">
 
-        {% endif %}
+                                        Status
 
-        <hr>
+                                    </p>
 
-        <a href="/dashboard">
-            Kembali ke Dashboard
-        </a>
+                                    {% if task[3] == "belum" %}
 
+                                        <span class="status-badge status-belum">
+
+                                            🔴 BELUM
+
+                                        </span>
+
+                                    {% elif task[3] == "progress" %}
+
+                                        <span class="status-badge status-progress">
+
+                                            🟡 PROGRESS
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-badge status-selesai">
+
+                                            🟢 SELESAI
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="task-status-actions">
+
+                                    <form
+                                        action="/update-task-status/{{ task[0] }}/belum"
+                                        method="POST">
+
+                                        <button
+
+                                            class="btn-belum"
+                                            type="submit">
+
+                                            Belum
+
+                                        </button>
+
+                                    </form>
+
+                                    <form
+                                        action="/update-task-status/{{ task[0] }}/progress"
+                                        method="POST">
+
+                                        <button
+                                            class="btn-progress"
+                                            type="submit">
+
+                                            Progress
+
+                                        </button>
+
+                                    </form>
+
+                                    <form
+                                        action="/update-task-status/{{ task[0] }}/selesai"
+                                        method="POST">
+
+                                        <button
+                                            class="btn-selesai"
+                                            type="submit">
+
+                                            Selesai
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                                <div class="detail-actions">
+
+                                    <a
+                                        href="/edit-task/{{ task[0] }}"
+                                        class="btn-edit">
+
+                                        ✏ Edit
+
+                                    </a>
+
+                                    <form
+                                        action="/delete-task/{{ task[0] }}"
+                                        method="POST">
+
+                                        <button
+                                            class="btn-danger"
+                                            type="submit"
+                                            onclick="return confirm('Yakin ingin menghapus tugas ini?')">
+
+                                            🗑 Hapus
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>
+                    Belum ada tugas
+                </p>
+
+            {% endif %}
+
+
+            <div class="detail-actions">
+
+                <a
+                href="/dashboard"
+                class="btn-edit">
+
+                    ← Dashboard
+
+                </a>
+
+            </div>
+        
+        </div>
     </div>
+
+    <script>
+
+        const headers = document.querySelectorAll(".accordion-header");
+
+        headers.forEach(header => {
+
+            header.addEventListener("click", () => {
+
+                const card = header.parentElement;
+
+                card.classList.toggle("active");
+
+            });
+
+        });
+
+    </script>
+
+    <script
+        defer
+        src="{{ url_for('static', filename='js/darkmode.js') }}">
+    </script>
 
 </body>
 </html>

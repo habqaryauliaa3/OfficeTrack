@@ -9,6 +9,7 @@ def create_income_table():
     CREATE TABLE IF NOT EXISTS income(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
+        kategori TEXT NOT NULL,
         tanggal TEXT NOT NULL,
         keterangan TEXT NOT NULL,
         nominal INTEGER NOT NULL,
@@ -31,6 +32,7 @@ def create_expense_table():
     CREATE TABLE IF NOT EXISTS expense(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
+        kategori TEXT NOT NULL,
         tanggal TEXT NOT NULL,
         keterangan TEXT NOT NULL,
         nominal INTEGER NOT NULL,
@@ -44,7 +46,7 @@ def create_expense_table():
     conn.close()
 
 
-def add_income(user_id, tanggal, keterangan, nominal):
+def add_income(user_id, kategori, tanggal, keterangan, nominal):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -53,14 +55,16 @@ def add_income(user_id, tanggal, keterangan, nominal):
         """
         INSERT INTO income(
             user_id,
+            kategori,
             tanggal,
             keterangan,
             nominal
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
         """,
         (
             user_id,
+            kategori,
             tanggal,
             keterangan,
             nominal,
@@ -93,7 +97,7 @@ def get_incomes(user_id):
     return incomes
 
 
-def delete_income(income_id):
+def delete_income(user_id, income_id):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -102,15 +106,16 @@ def delete_income(income_id):
         """
         DELETE FROM income
         WHERE id = ?
+        AND user_id = ?
         """,
-        (income_id,),
+        (income_id, user_id),
     )
 
     conn.commit()
     conn.close()
 
 
-def add_expense(user_id, tanggal, keterangan, nominal):
+def add_expense(user_id, kategori, tanggal, keterangan, nominal):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -119,14 +124,16 @@ def add_expense(user_id, tanggal, keterangan, nominal):
         """
         INSERT INTO expense(
             user_id,
+            kategori,
             tanggal,
             keterangan,
             nominal
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
         """,
         (
             user_id,
+            kategori,
             tanggal,
             keterangan,
             nominal,
@@ -159,7 +166,7 @@ def get_expenses(user_id):
     return expenses
 
 
-def delete_expense(expense_id):
+def delete_expense(user_id, expense_id):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -168,8 +175,9 @@ def delete_expense(expense_id):
         """
         DELETE FROM expense
         WHERE id = ?
+        AND user_id = ?
         """,
-        (expense_id,),
+        (expense_id, user_id),
     )
 
     conn.commit()
@@ -221,3 +229,120 @@ def get_total_expense(user_id):
 def get_balance(user_id):
 
     return get_total_income(user_id) - get_total_expense(user_id)
+
+def get_monthly_summary(user_id, bulan, tahun):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT SUM(nominal)
+        FROM income
+        WHERE user_id = ?
+        AND strftime('%m', tanggal) = ?
+        AND strftime('%Y', tanggal) = ?
+        """,
+        (
+            user_id,
+            bulan,
+            tahun,
+        ),
+    )
+
+    income = cursor.fetchone()[0] or 0
+
+    cursor.execute(
+        """
+        SELECT SUM(nominal)
+        FROM expense
+        WHERE user_id = ?
+        AND strftime('%m', tanggal) = ?
+        AND strftime('%Y', tanggal) = ?
+        """,
+        (
+            user_id,
+            bulan,
+            tahun,
+        ),
+    )
+
+    expense = cursor.fetchone()[0] or 0
+    conn.close()
+
+    balance = income - expense
+
+    return {
+        "monthly_income": income,
+        "monthly_expense": expense,
+        "monthly_balance": balance,
+    }
+
+
+def get_income_chart_data(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            kategori,
+            SUM(nominal)
+        FROM income
+        WHERE user_id = ?
+        GROUP BY kategori
+        ORDER BY kategori
+        """,
+        (user_id,),
+    )
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    labels = []
+    data = []
+
+    for row in rows:
+        labels.append(row[0])
+        data.append(row[1])
+
+    return {
+        "labels": labels,
+        "data": data,
+    }
+
+
+def get_expense_chart_data(user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            kategori,
+            SUM(nominal)
+        FROM expense
+        WHERE user_id = ?
+        GROUP BY kategori
+        ORDER BY kategori
+        """,
+        (user_id,),
+    )
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    labels = []
+    data = []
+
+    for row in rows:
+        labels.append(row[0])
+        data.append(row[1])
+
+    return {
+        "labels": labels,
+        "data": data,
+    }

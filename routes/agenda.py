@@ -3,15 +3,14 @@ from flask import Blueprint, render_template, request, redirect, session
 from database.agenda_db import *
 from database.task_db import *
 from services.agenda_service import *
+from utils.security import login_required
 
 agenda_bp = Blueprint("agenda", __name__)
 
 
 @agenda_bp.route("/create-agenda", methods=["GET", "POST"])
+@login_required
 def create_agenda():
-
-    if "user_id" not in session:
-        return redirect("/login")
 
     if request.method == "POST":
 
@@ -24,7 +23,7 @@ def create_agenda():
         if "prioritas" in request.form:
             prioritas = 1
 
-        create_agenda_service(
+        error = create_agenda_service(
             session["user_id"],
             judul,
             deskripsi,
@@ -32,6 +31,9 @@ def create_agenda():
             prioritas
         )
 
+        if error:
+            return error
+        
         return redirect("/dashboard")
 
     return render_template("agenda/create.html")
@@ -41,12 +43,13 @@ def create_agenda():
 # DETAIL AGENDA
 # =====================
 @agenda_bp.route("/agenda/<int:agenda_id>")
+@login_required
 def detail_agenda(agenda_id):
 
-    if "user_id" not in session:
-        return redirect("/login")
-
-    agenda = get_agenda_by_id(agenda_id)
+    agenda = get_agenda_by_id(
+        session["user_id"],
+        agenda_id,
+    )
 
     tasks = get_tasks(agenda_id)
 
@@ -61,12 +64,13 @@ def detail_agenda(agenda_id):
 
 
 @agenda_bp.route("/edit-agenda/<int:agenda_id>", methods=["GET", "POST"])
+@login_required
 def edit_agenda(agenda_id):
 
-    if "user_id" not in session:
-        return redirect("/login")
-
-    agenda = get_agenda_by_id(agenda_id)
+    agenda = get_agenda_by_id(
+        session["user_id"],
+        agenda_id,
+    )
 
     if request.method == "POST":
 
@@ -79,20 +83,20 @@ def edit_agenda(agenda_id):
         if "prioritas" in request.form:
             prioritas = 1
 
-        edit_agenda_service(
+        error = edit_agenda_service(
             session["user_id"], agenda_id, judul, deskripsi, tanggal, prioritas
         )
 
+        if error:
+            return error
         return redirect("/dashboard")
 
     return render_template("agenda/edit.html", agenda=agenda)
 
 
-@agenda_bp.route("/delete-agenda/<int:agenda_id>")
+@agenda_bp.route("/delete-agenda/<int:agenda_id>", methods=["POST"])
+@login_required
 def remove_agenda(agenda_id):
-
-    if "user_id" not in session:
-        return redirect("/login")
 
     delete_agenda_service(session["user_id"], agenda_id)
 
@@ -100,44 +104,44 @@ def remove_agenda(agenda_id):
 
 
 @agenda_bp.route("/add-task/<int:agenda_id>", methods=["POST"])
+@login_required
 def create_task(agenda_id):
-
-    if "user_id" not in session:
-        return redirect("/login")
 
     nama_tugas = request.form["nama_tugas"]
 
-    create_task_service(session["user_id"], agenda_id, nama_tugas)
+    error = create_task_service(session["user_id"], agenda_id, nama_tugas)
 
+    if error:
+        return error
+    
     return redirect(f"/agenda/{agenda_id}")
 
 
 @agenda_bp.route("/edit-task/<int:task_id>", methods=["GET", "POST"])
+@login_required
 def edit_task(task_id):
 
-    if "user_id" not in session:
-        return redirect("/login")
-
-    task = get_task_by_id(task_id)
+    task = get_task_by_id(session["user_id"], task_id)
 
     if request.method == "POST":
 
         nama_tugas = request.form["nama_tugas"]
 
-        edit_task_service(session["user_id"], task_id, nama_tugas)
+        error = edit_task_service(session["user_id"], task_id, nama_tugas)
+
+        if error:
+            return error
 
         return redirect(f"/agenda/{task[1]}")
 
     return render_template("agenda/edit_task.html", task=task)
 
 
-@agenda_bp.route("/delete-task/<int:task_id>")
+@agenda_bp.route("/delete-task/<int:task_id>", methods=["POST"])
+@login_required
 def remove_task(task_id):
 
-    if "user_id" not in session:
-        return redirect("/login")
-
-    task = get_task_by_id(task_id)
+    task = get_task_by_id(session["user_id"], task_id)
 
     agenda_id = task[1]
 
@@ -149,13 +153,11 @@ def remove_task(task_id):
     return redirect(f"/agenda/{agenda_id}")
 
 
-@agenda_bp.route("/update-task-status/<int:task_id>/<status>")
+@agenda_bp.route("/update-task-status/<int:task_id>/<status>", methods=["POST"])
+@login_required
 def change_task_status(task_id, status):
 
-    if "user_id" not in session:
-        return redirect("/login")
-
-    task = get_task_by_id(task_id)
+    task = get_task_by_id(session["user_id"], task_id)
 
     change_task_status_service(
         session["user_id"],

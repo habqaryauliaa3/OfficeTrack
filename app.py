@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask
 
 from routes.auth import auth_bp
@@ -14,11 +17,18 @@ from database.finance_db import create_income_table, create_expense_table
 
 from utils.filters import rupiah, tanggal
 
+load_dotenv()
+
 app = Flask(__name__)
 
 app.jinja_env.filters["rupiah"] = rupiah
 app.jinja_env.filters["tanggal"] = tanggal
-app.secret_key = "officetrack_secret_key"
+secret_key = os.getenv("SECRET_KEY")
+
+if secret_key is None:
+    raise RuntimeError("SECRET_KEY belum diatur pada file .env")
+
+app.secret_key = secret_key
 
 # database setup
 create_database()

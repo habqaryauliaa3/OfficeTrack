@@ -83,18 +83,21 @@ def get_tasks(agenda_id):
     return tasks
 
 
-def get_task_by_id(task_id):
+def get_task_by_id(user_id, task_id):
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
         """
-        SELECT *
+        SELECT tasks.*
         FROM tasks
-        WHERE id = ?
+        JOIN agenda
+        ON tasks.agenda_id = agenda.id
+        WHERE tasks.id = ?
+        AND agenda.user_id = ?
         """,
-        (task_id,),
+        (task_id, user_id),
     )
 
     task = cursor.fetchone()
@@ -104,7 +107,7 @@ def get_task_by_id(task_id):
     return task
 
 
-def update_task(task_id, nama_tugas):
+def update_task(user_id, task_id, nama_tugas):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -113,16 +116,23 @@ def update_task(task_id, nama_tugas):
         """
         UPDATE tasks
         SET nama_tugas = ?
-        WHERE id = ?
+        WHERE id IN (
+            SELECT tasks.id
+            FROM tasks
+            JOIN agenda
+            ON tasks.agenda_id = agenda.id
+            WHERE tasks.id = ?
+            AND agenda.user_id = ?
+        ) 
         """,
-        (nama_tugas, task_id),
+        (nama_tugas, task_id, user_id),
     )
 
     conn.commit()
     conn.close()
 
 
-def delete_task(task_id):
+def delete_task(user_id, task_id):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -130,16 +140,23 @@ def delete_task(task_id):
     cursor.execute(
         """
         DELETE FROM tasks
-        WHERE id = ?
+        WHERE id IN (
+            SELECT tasks.id
+            FROM tasks
+            JOIN agenda
+            ON tasks.agenda_id = agenda.id
+            WHERE tasks.id = ?
+            AND agenda.user_id = ?
+        )
         """,
-        (task_id,),
+        (task_id, user_id),
     )
 
     conn.commit()
     conn.close()
 
 
-def update_task_status(task_id, status):
+def update_task_status(user_id, task_id, status):
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -148,9 +165,16 @@ def update_task_status(task_id, status):
         """
         UPDATE tasks
         SET status = ?
-        WHERE id = ?
+        WHERE id IN (
+            SELECT tasks.id
+            FROM tasks
+            JOIN agenda
+            ON tasks.agenda_id = agenda.id
+            WHERE tasks.id = ?
+            AND agenda.user_id = ?
+        )
         """,
-        (status, task_id),
+        (status, task_id, user_id),
     )
 
     conn.commit()
