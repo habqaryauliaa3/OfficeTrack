@@ -17,7 +17,8 @@ from database.finance_db import create_income_table, create_expense_table
 
 from utils.filters import rupiah, tanggal
 
-load_dotenv()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 app = Flask(__name__)
 
